@@ -3,11 +3,13 @@ using UnityEngine;
 
 public class PlayerControllerX : MonoBehaviour
 {
-    public bool hasPowerup;
     public GameObject powerupIndicator;
+    public ParticleSystem smokeParticle;
+    public bool hasPowerup;
     public int powerUpDuration = 5;
 
     private const float Speed = 500;
+    private const float TurboSpeed = 5000;
     private const float NormalStrength = 10; // how hard to hit enemy without powerup
     private const float PowerupStrength = 25; // how hard to hit enemy with powerup
 
@@ -22,12 +24,20 @@ public class PlayerControllerX : MonoBehaviour
 
     private void Update()
     {
+        var speed = Speed;
+        if (Input.GetKey(KeyCode.Space))
+        {
+            PlaySmokeParticle();
+            speed = TurboSpeed;
+        }
         // Add force to player in direction of the focal point (and camera)
         float verticalInput = Input.GetAxis("Vertical");
-        _playerRb.AddForce(_focalPoint.transform.forward * (verticalInput * Speed * Time.deltaTime));
+        _playerRb.AddForce(_focalPoint.transform.forward * (verticalInput * speed * Time.deltaTime));
 
         // Set powerup indicator position to beneath player
-        powerupIndicator.transform.position = transform.position + new Vector3(0, -0.6f, 0);
+        var playerPosition = transform.position;
+        powerupIndicator.transform.position = playerPosition + new Vector3(0, -0.6f, 0);
+        smokeParticle.transform.position = new Vector3(playerPosition.x, -0.5f, playerPosition.z);
     }
 
     // If Player collides with powerup, activate powerup
@@ -48,6 +58,18 @@ public class PlayerControllerX : MonoBehaviour
         yield return new WaitForSeconds(powerUpDuration);
         hasPowerup = false;
         powerupIndicator.SetActive(false);
+    }
+
+    private void PlaySmokeParticle()
+    {
+        smokeParticle.Play();
+        StartCoroutine(SmokeParticleDeactivateRoutine());
+    }
+
+    IEnumerator SmokeParticleDeactivateRoutine()
+    {
+        yield return new WaitForSeconds(0.5f);
+        smokeParticle.Stop();
     }
 
     // If Player collides with enemy
