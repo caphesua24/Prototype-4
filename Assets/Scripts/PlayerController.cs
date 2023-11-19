@@ -10,13 +10,16 @@ public class PlayerController : MonoBehaviour
     private const float PowerUpCountDownSeconds = 7;
 
     private bool _hasPowerUp;
+    private bool _isGameOver;
     private GameObject _focalPoint;
     private Rigidbody _rigidbody;
+    private SpawnManager _spawnManager;
 
     private void Start()
     {
         _focalPoint = GameObject.Find("Focal Point");
         _rigidbody = GetComponent<Rigidbody>();
+        _spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
     }
 
     private void Update()
@@ -25,6 +28,17 @@ public class PlayerController : MonoBehaviour
         _rigidbody.AddForce(_focalPoint.transform.forward * (verticalInput * speed));
 
         powerUpIndicator.gameObject.transform.position = transform.position - Vector3.up * 0.4f;
+
+        if (transform.position.y < -10)
+        {
+            _isGameOver = true;
+            Debug.Log("Game Over");
+        }
+    }
+
+    public bool IsGameOver()
+    {
+        return _isGameOver;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -64,5 +78,6 @@ public class PlayerController : MonoBehaviour
     {
         _hasPowerUp = false;
         powerUpIndicator.gameObject.SetActive(false);
+        _spawnManager.RandomSpawnPowerUp();
     }
 }
