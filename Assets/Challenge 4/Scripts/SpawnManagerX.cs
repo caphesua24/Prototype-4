@@ -4,19 +4,17 @@ public class SpawnManagerX : MonoBehaviour
 {
     public GameObject enemyPrefab;
     public GameObject powerupPrefab;
-
-    private float spawnRangeX = 10;
-    private float spawnZMin = 15; // set min spawn Z
-    private float spawnZMax = 25; // set max spawn Z
+    public GameObject player;
 
     public int enemyCount;
     public int waveCount = 1;
 
-
-    public GameObject player;
+    private const float SpawnRangeX = 10;
+    private const float SpawnZMin = 15; // set min spawn Z
+    private const float SpawnZMax = 25; // set max spawn Z
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         enemyCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
 
@@ -29,8 +27,8 @@ public class SpawnManagerX : MonoBehaviour
     // Generate random spawn position for powerups and enemy balls
     Vector3 GenerateSpawnPosition()
     {
-        float xPos = Random.Range(-spawnRangeX, spawnRangeX);
-        float zPos = Random.Range(spawnZMin, spawnZMax);
+        float xPos = Random.Range(-SpawnRangeX, SpawnRangeX);
+        float zPos = Random.Range(SpawnZMin, SpawnZMax);
         return new Vector3(xPos, 0, zPos);
     }
 
