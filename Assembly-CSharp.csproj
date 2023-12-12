@@ -50,6 +50,7 @@
      <Compile Include="Assets/Challenge 4/Scripts/SpawnManagerX.cs" />
      <Compile Include="Assets/Challenge 4/Scripts/EnemyX.cs" />
      <Compile Include="Assets/Scripts/SpawnManager.cs" />
+     <Compile Include="Assets/Scripts/EnemyChasingPlayer.cs" />
      <Compile Include="Assets/Scripts/RotateCamera.cs" />
      <Compile Include="Assets/Scripts/PlayerController.cs" />
      <Compile Include="Assets/Challenge 4/Scripts/PlayerControllerX.cs" />
