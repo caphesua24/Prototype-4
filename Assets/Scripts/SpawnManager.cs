@@ -5,33 +5,34 @@ public class SpawnManager : MonoBehaviour
 {
     public GameObject[] enemyPrefabs;
     public GameObject powerUpPrefab;
-    public int enemyCount;
-    public bool powerUpAvailable;
-    public Vector3 powerUpPosition;
-    public int waveNumber = 1;
-    private const float SpawnRange = 9;
+    public bool PowerUpAvailable { get; private set; }
+    public Vector3 PowerUpPosition { get; private set; }
+
     private PlayerController _playerController;
+    private const float SpawnRange = 9;
+    private int _enemyCount;
+    private int _waveNumber = 1;
 
     private void Start()
     {
         _playerController = GameObject.Find("Player").GetComponent<PlayerController>();
-        SpawnEnemyWave(waveNumber);
+        SpawnEnemyWave(_waveNumber);
         RandomSpawnPowerUp();
     }
 
     public void OnPowerUpCollect()
     {
-        powerUpAvailable = false;
+        PowerUpAvailable = false;
         RandomSpawnPowerUp();
     }
 
     public void OnEnemyPrefabsDestroy()
     {
-        enemyCount--;
-        if (enemyCount > 0 || _playerController.IsGameOver()) return;
+        _enemyCount--;
+        if (_enemyCount > 0 || _playerController.IsGameOver()) return;
 
-        waveNumber++;
-        SpawnEnemyWave(waveNumber);
+        _waveNumber++;
+        SpawnEnemyWave(_waveNumber);
     }
 
     private void RandomSpawnPowerUp()
@@ -43,8 +44,8 @@ public class SpawnManager : MonoBehaviour
     {
         yield return new WaitForSeconds(Random.Range(3f, 7f));
         var powerUp = Instantiate(powerUpPrefab, RandomSpawnPosition(), powerUpPrefab.transform.rotation);
-        powerUpPosition = powerUp.transform.position;
-        powerUpAvailable = true;
+        PowerUpPosition = powerUp.transform.position;
+        PowerUpAvailable = true;
     }
 
     private void SpawnEnemyWave(int numberOfEnemy)
@@ -53,7 +54,7 @@ public class SpawnManager : MonoBehaviour
         {
             var prefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
             Instantiate(prefab, RandomSpawnPosition(), prefab.transform.rotation);
-            enemyCount++;
+            _enemyCount++;
         }
     }
 

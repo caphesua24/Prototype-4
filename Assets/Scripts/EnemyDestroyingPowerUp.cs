@@ -7,10 +7,10 @@ public class EnemyDestroyingPowerUp : EnemyChasingPlayer
         if (transform.position.y < 0) return;
         
         // Check if a power-up item is available
-        if (spawnManager.powerUpAvailable)
+        if (spawnManager.PowerUpAvailable)
         {
             // Move to destroy the Power-Up item
-            var lookDirection = (spawnManager.powerUpPosition - transform.position).normalized;
+            var lookDirection = (spawnManager.PowerUpPosition - transform.position).normalized;
             body.AddForce(lookDirection * speed);
         }
         else
