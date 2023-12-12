@@ -3,9 +3,11 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    public GameObject enemyPrefab;
+    public GameObject[] enemyPrefabs;
     public GameObject powerUpPrefab;
     public int enemyCount;
+    public bool powerUpAvailable;
+    public Vector3 powerUpPosition;
     public int waveNumber = 1;
     private const float SpawnRange = 9;
     private PlayerController _playerController;
@@ -14,6 +16,12 @@ public class SpawnManager : MonoBehaviour
     {
         _playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         SpawnEnemyWave(waveNumber);
+        RandomSpawnPowerUp();
+    }
+
+    public void OnPowerUpCollect()
+    {
+        powerUpAvailable = false;
         RandomSpawnPowerUp();
     }
 
@@ -26,7 +34,7 @@ public class SpawnManager : MonoBehaviour
         SpawnEnemyWave(waveNumber);
     }
 
-    public void RandomSpawnPowerUp()
+    private void RandomSpawnPowerUp()
     {
         StartCoroutine(SpawnPowerUpRoutine());
     }
@@ -34,14 +42,17 @@ public class SpawnManager : MonoBehaviour
     private IEnumerator SpawnPowerUpRoutine()
     {
         yield return new WaitForSeconds(Random.Range(3f, 7f));
-        Instantiate(powerUpPrefab, RandomSpawnPosition(), powerUpPrefab.transform.rotation);
+        var powerUp = Instantiate(powerUpPrefab, RandomSpawnPosition(), powerUpPrefab.transform.rotation);
+        powerUpPosition = powerUp.transform.position;
+        powerUpAvailable = true;
     }
 
     private void SpawnEnemyWave(int numberOfEnemy)
     {
         for (var i = 0; i < numberOfEnemy; i++)
         {
-            Instantiate(enemyPrefab, RandomSpawnPosition(), enemyPrefab.transform.rotation);
+            var prefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
+            Instantiate(prefab, RandomSpawnPosition(), prefab.transform.rotation);
             enemyCount++;
         }
     }

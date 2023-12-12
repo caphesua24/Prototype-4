@@ -69,6 +69,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnPowerUpActivate()
     {
+        _spawnManager.OnPowerUpCollect();
         _hasPowerUp = true;
         StartCoroutine(PowerUpCountDownRoutine());
         powerUpIndicator.gameObject.SetActive(true);
@@ -78,6 +79,5 @@ public class PlayerController : MonoBehaviour
     {
         _hasPowerUp = false;
         powerUpIndicator.gameObject.SetActive(false);
-        _spawnManager.RandomSpawnPowerUp();
     }
 }
